@@ -1,6 +1,7 @@
 // lib/api-client.ts
 import { Product } from "@/app/types/product";
 import { DUMMY_PRODUCTS } from "@/app/lib/dummy-data/products";
+import { PRODUCT_CATEGORIES } from "./dummy-categories";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -41,5 +42,30 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     return res.json();
   } catch {
     return DUMMY_PRODUCTS.find((p) => p.slug === slug) || null;
+  }
+}
+
+export async function getProductsByCategory(
+  category: string
+): Promise<Product[]> {
+  try {
+    if (!API_BASE_URL) {
+      const slugs = PRODUCT_CATEGORIES[category];
+
+      if (!slugs) return [];
+      return DUMMY_PRODUCTS.filter((p) => slugs.includes(p.slug));
+    }
+
+    const res = await fetch(`${API_BASE_URL}/products?category=${category}`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch category products");
+    }
+
+    return res.json();
+  } catch {
+    return [];
   }
 }
