@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useCartStore } from "@/app/store/cart-store";
+import { useUIStore } from "@/app/store/ui-store";
 import { ShoppingBag, User, Menu, X } from "lucide-react";
 
 import { cn } from "@/app/utils/cn";
@@ -11,9 +13,11 @@ import { ROUTES } from "@/app/constants/routes";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const totalItems = useCartStore((s) => s.totalItems);
+  const openMiniCart = useUIStore((s) => s.openMiniCart);
 
   // const cartCount = useCartStore((s) => s.totalItems);
-  const cartCount = 0;
+  const cartCount = totalItems;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white">
@@ -52,6 +56,18 @@ export default function Navbar() {
               </span>
             )}
           </Link>
+          <button
+            onClick={openMiniCart}
+            className="relative cursor-pointer"
+            aria-label="Checkout"
+          >
+            🛒
+            {totalItems > 0 && (
+              <span className="absolute -right-2 -top-2 rounded-full bg-black px-2 text-xs text-white">
+                {totalItems}
+              </span>
+            )}
+          </button>
 
           {/* Mobile Menu Toggle */}
           <button

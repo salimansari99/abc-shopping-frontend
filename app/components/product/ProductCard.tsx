@@ -6,19 +6,29 @@ import { ShoppingBag } from "lucide-react";
 
 import { Product } from "@/app/types/product";
 import { formatPrice } from "@/app/lib/format";
-// import { useCartStore } from "@/store/cart-store";
+import { useCartStore } from "@/app/store/cart-store";
+import { productToCartItem } from "@/app/lib/cart-utils";
 
 type ProductCardProps = {
   product: Product;
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
-  // const addToCart = useCartStore((s) => s.addItem);
+  const addToCart = useCartStore((s) => s.addItem);
 
   const primaryImage = product.images?.[0]?.url || "/images/placeholder.webp";
 
-  const price = product.variants?.[0]?.priceCents ?? 0;
-  const compareAt = product.variants?.[0]?.compareAtCents;
+  // ✅ Select default variant (later: user-selected)
+  const variant = product.variants?.[0];
+
+  if (!variant) return null;
+
+  const price = variant.priceCents;
+  const compareAt = variant.compareAtCents;
+
+  const handleAddToCart = () => {
+    addToCart(productToCartItem(product, variant, 1));
+  };
 
   return (
     <div className="group relative overflow-hidden rounded-lg border bg-white transition hover:shadow-lg">
@@ -60,7 +70,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-full items-center justify-center gap-2 bg-white/95 p-3 transition-all group-hover:translate-y-0 group-hover:pointer-events-auto">
         <button
           className="flex w-full items-center justify-center gap-2 rounded-md bg-black px-4 py-2 text-sm text-white hover:bg-gray-800"
-          // onClick={() => addToCart(product)}
+          onClick={handleAddToCart}
         >
           <ShoppingBag className="h-4 w-4" />
           Add to Cart

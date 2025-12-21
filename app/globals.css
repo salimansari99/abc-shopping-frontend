@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+/* globals.css */
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+.animate-remove {
+  animation: fadeOut 0.25s ease forwards;
+}
