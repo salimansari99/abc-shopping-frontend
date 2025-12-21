@@ -1,5 +1,4 @@
-import Header from "@/app/components/common/Navbar";
-import MiniCart from "@/app/components/cart/MiniCart";
+// import MiniCart from "@/app/components/cart/MiniCart";
 
 export default function ShopLayout({
   children,
@@ -8,9 +7,8 @@ export default function ShopLayout({
 }) {
   return (
     <>
-      <Header />
       {children}
-      <MiniCart />
+      {/* <MiniCart /> */}
     </>
   );
 }

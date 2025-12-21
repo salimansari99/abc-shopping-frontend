@@ -8,7 +8,7 @@ import FeaturedCollections from "@/app/components/home/FeaturedCollections";
 import PromoBanner from "@/app/components/home/PromoBanner";
 import Newsletter from "@/app/components/home/Newsletter";
 import { DevCartSeeder } from "../(checkout)/checkout/DevCartSeeder";
-import MiniCart from "@/app/components/cart/MiniCart";
+// import MiniCart from "@/app/components/cart/MiniCart";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -20,7 +20,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <MiniCart />
+      {/* <MiniCart /> */}
       {/* Hero */}
       <section className="container mx-auto px-4 py-16 text-center">
         <h1 className="mb-4 text-4xl font-bold md:text-5xl">

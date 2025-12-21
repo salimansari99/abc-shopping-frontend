@@ -16,7 +16,7 @@ export default function MiniCart() {
       <div onClick={closeMiniCart} className="fixed inset-0 z-40 bg-black/40" />
 
       {/* Drawer */}
-      <aside className="fixed right-0 top-0 z-50 h-full w-80 bg-white shadow-xl">
+      <aside className="fixed right-0 top-0 z-99 h-full w-80 bg-white shadow-xl">
         <div className="flex items-center justify-between border-b p-4">
           <h3 className="font-semibold">Your Cart</h3>
           <button onClick={closeMiniCart}>✕</button>
