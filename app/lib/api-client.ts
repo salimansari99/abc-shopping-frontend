@@ -4,27 +4,21 @@ import { DUMMY_PRODUCTS } from "@/app/lib/dummy-data/products";
 import { PRODUCT_CATEGORIES } from "./dummy-categories";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const PAGE_SIZE = 8;
 
-export async function getFeaturedProducts(): Promise<Product[]> {
-  try {
-    if (!API_BASE_URL) {
-      console.warn("API URL not set. Using dummy products.");
-      return DUMMY_PRODUCTS;
-    }
+export async function getFeaturedProducts(
+  page: number = 1
+): Promise<{ products: Product[]; totalPages: number }> {
+  // 👉 Dummy data example
+  const { DUMMY_PRODUCTS } = await import("./dummy-data/products");
 
-    const res = await fetch(`${API_BASE_URL}/products?featured=true`, {
-      cache: "no-store",
-    });
+  const start = (page - 1) * PAGE_SIZE;
+  const end = start + PAGE_SIZE;
 
-    if (!res.ok) {
-      throw new Error("API error");
-    }
+  const products = DUMMY_PRODUCTS.slice(start, end);
+  const totalPages = Math.ceil(DUMMY_PRODUCTS.length / PAGE_SIZE);
 
-    return res.json();
-  } catch (error) {
-    console.warn("Using dummy products due to fetch error:", error);
-    return DUMMY_PRODUCTS;
-  }
+  return { products, totalPages };
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {

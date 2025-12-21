@@ -23,7 +23,6 @@ export async function generateMetadata({
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { category } = await params;
-  console.log(category, "category");
 
   const products = await getProductsByCategory(category);
 

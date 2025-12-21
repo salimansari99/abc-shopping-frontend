@@ -2,6 +2,13 @@ import { Metadata } from "next";
 
 import ProductCard from "@/app/components/product/ProductCard";
 import { getFeaturedProducts } from "@/app/lib/api-client";
+import Pagination from "@/app/components/common/Pagination";
+
+type ShopPageProps = {
+  searchParams: Promise<{
+    page?: string;
+  }>;
+};
 
 export const metadata: Metadata = {
   title: "Shop",
@@ -9,9 +16,11 @@ export const metadata: Metadata = {
     "Explore our premium fashion collection. Discover timeless styles and new arrivals.",
 };
 
-export default async function ShopPage() {
-  // Server Component → runs on server
-  const products = await getFeaturedProducts();
+export default async function ShopPage({ searchParams }: ShopPageProps) {
+  const { page } = await searchParams;
+  const currentPage = Number(page) || 1;
+
+  const { products, totalPages } = await getFeaturedProducts(currentPage);
 
   return (
     <section className="container mx-auto px-4 py-10">
@@ -26,17 +35,12 @@ export default async function ShopPage() {
           </p>
         </div>
 
-        {/* Placeholder for filters / sorting */}
-        <div className="flex gap-3">
-          <select
-            className="rounded-md border px-3 py-2 text-sm"
-            defaultValue="newest"
-          >
-            <option value="newest">Newest</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-          </select>
-        </div>
+        {/* Sorting (future) */}
+        <select className="rounded-md border px-3 py-2 text-sm">
+          <option>Newest</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+        </select>
       </div>
 
       {/* Product Grid */}
@@ -45,11 +49,16 @@ export default async function ShopPage() {
           No products found.
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          <Pagination currentPage={currentPage} totalPages={totalPages} />
+        </>
       )}
     </section>
   );

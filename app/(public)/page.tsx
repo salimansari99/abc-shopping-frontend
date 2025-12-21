@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const products = await getFeaturedProducts();
+  const { products, totalPages } = await getFeaturedProducts(1);
 
   return (
     <>
