@@ -6,7 +6,7 @@ import { useCartStore } from "@/app/store/cart-store";
 import { formatPrice } from "@/app/lib/format";
 import { stripePromise } from "@/app/lib/stripe";
 import CheckoutForm from "@/app/components/checkout/CheckoutForm";
-import CheckoutHeader from "@/app/components/checkout/CheckoutHeader";
+// import CheckoutHeader from "@/app/components/checkout/CheckoutHeader";
 
 export default function CheckoutPage() {
   const { items, totalPrice, updateQuantity, removeItem } = useCartStore();
@@ -24,7 +24,7 @@ export default function CheckoutPage() {
 
   return (
     <>
-      <CheckoutHeader />
+      {/* <CheckoutHeader /> */}
       <section className="container mx-auto max-w-4xl px-4 py-12">
         <h1 className="mb-8 text-3xl font-bold">Checkout</h1>
 
