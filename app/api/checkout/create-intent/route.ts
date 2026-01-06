@@ -1,48 +1,42 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import Stripe from "stripe";
+
+export const dynamic = "force-dynamic";
 
 type BuildId = "2025-12-15.clover";
 
 const build: BuildId = "2025-12-15.clover";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: build,
-});
-
-export async function POST(request: NextRequest) {
-  try {
-    const { items } = await request.json();
-
-    if (!items || !Array.isArray(items) || items.length === 0) {
-      return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
-    }
-
-    // Calculate total amount in cents
-    const totalAmount = items.reduce(
-      (sum: number, item: { priceCents: number; quantity: number }) =>
-        sum + item.priceCents * item.quantity,
-      0
-    );
-
-    // Create payment intent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: totalAmount,
-      currency: "usd",
-      metadata: {
-        items: JSON.stringify(items),
-      },
-    });
-
+export async function POST(req: Request) {
+  // 🧪 Mock mode
+  if (process.env.NEXT_PUBLIC_USE_STRIPE_MOCK === "true") {
     return NextResponse.json({
-      clientSecret: paymentIntent.client_secret,
+      clientSecret: "pi_mock_secret_123",
     });
-  } catch (error) {
-    console.error("Error creating payment intent:", error);
+  }
+
+  if (!process.env.STRIPE_SECRET_KEY) {
     return NextResponse.json(
-      { error: "Failed to create payment intent" },
+      { error: "Stripe secret key missing" },
       { status: 500 }
     );
   }
+
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: build,
+  });
+
+  const { items } = await req.json();
+
+  const amount = items.reduce(
+    (sum: number, i: any) => sum + i.priceCents * i.quantity,
+    0
+  );
+
+  const intent = await stripe.paymentIntents.create({
+    amount,
+    currency: "usd",
+  });
+
+  return NextResponse.json({ clientSecret: intent.client_secret });
 }
-
-
