@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ShoppingBag, User, Menu, X, Search } from "lucide-react";
+import { ShoppingBag, User, Menu, Search } from "lucide-react";
 
 import { useCartStore } from "@/app/store/cart-store";
 import { useUIStore } from "@/app/store/ui-store";
+import SearchModal from "./SearchModal";
 import { cn } from "@/app/utils/cn";
 import { ROUTES } from "@/app/constants/routes";
 import SideDrawer from "./SideDrawer";
@@ -17,6 +18,9 @@ export default function Navbar() {
 
   const totalItems = useCartStore((s) => s.totalItems);
   const openMiniCart = useUIStore((s) => s.openMiniCart);
+  const openSearch = useUIStore((s) => s.openSearch);
+  const isSearchOpen = useUIStore((s) => s.isSearchOpen);
+  const closeSearch = useUIStore((s) => s.closeSearch);
   const hidden = useHideOnScroll();
 
   return (
@@ -39,12 +43,12 @@ export default function Navbar() {
           {/* LEFT: Hamburger (ALL SCREENS) */}
           {/* -------------------- */}
           <div className="flex w-1/3 items-center">
-            <button onClick={() => setOpen(!open)} aria-label="Toggle menu">
-              {open ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu onClick={() => setDrawerOpen(true)} className="h-6 w-6" />
-              )}
+            <button
+              onClick={() => setOpen(!open)}
+              aria-label="Toggle menu"
+              style={{ cursor: "pointer" }}
+            >
+              <Menu onClick={() => setDrawerOpen(true)} className="h-6 w-6" />
             </button>
           </div>
 
@@ -65,7 +69,11 @@ export default function Navbar() {
           {/* -------------------- */}
           <div className="flex w-1/3 items-center justify-end gap-4">
             {/* Search */}
-            <button aria-label="Search">
+            <button
+              aria-label="Search"
+              onClick={() => openSearch()}
+              style={{ cursor: "pointer" }}
+            >
               <Search className="h-5 w-5" />
             </button>
 
@@ -75,10 +83,11 @@ export default function Navbar() {
             </Link>
 
             {/* Cart */}
-            <button
-              onClick={openMiniCart}
+            <Link
+              href={ROUTES.CART}
               className="relative"
               aria-label="Cart"
+              style={{ cursor: "pointer" }}
             >
               <ShoppingBag className="h-5 w-5" />
               {totalItems > 0 && (
@@ -86,7 +95,7 @@ export default function Navbar() {
                   {totalItems}
                 </span>
               )}
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -115,6 +124,7 @@ export default function Navbar() {
 
       {/* Spacer for mobile bottom bar */}
       <div className="h-16 md:hidden" />
+      <SearchModal open={isSearchOpen} onClose={closeSearch} />
     </>
   );
 }

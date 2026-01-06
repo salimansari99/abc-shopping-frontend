@@ -11,3 +11,8 @@
 .animate-remove {
   animation: fadeOut 0.25s ease forwards;
 }
+
+/* Prevent horizontal scroll caused by overflow from large elements */
+html, body {
+  overflow-x: hidden;
+}

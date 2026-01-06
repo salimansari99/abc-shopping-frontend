@@ -1,11 +1,15 @@
 "use client";
 
 import { useCartStore } from "@/app/store/cart-store";
+import Image from "next/image";
 import { useUIStore } from "@/app/store/ui-store";
 import { formatPrice } from "@/app/lib/format";
 
 export default function MiniCart() {
   const { items, totalPrice, removeItem } = useCartStore();
+
+  // use next/image for optimization
+
   const { isMiniCartOpen, closeMiniCart } = useUIStore();
 
   if (!isMiniCartOpen) return null;
@@ -26,10 +30,14 @@ export default function MiniCart() {
           {items.map((item) => (
             <div key={item.variantId} className="flex gap-3">
               {item.image && (
-                <img
-                  src={item.image}
-                  className="h-16 w-14 rounded object-cover"
-                />
+                <div className="relative h-16 w-14 overflow-hidden rounded">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
               )}
 
               <div className="flex-1">

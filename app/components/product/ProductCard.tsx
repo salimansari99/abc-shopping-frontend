@@ -66,11 +66,24 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </div>
 
-      {/* Hover Actions */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-full items-center justify-center gap-2 bg-white/95 p-3 transition-all group-hover:translate-y-0 group-hover:pointer-events-auto">
+      {/* Mobile Add button (visible on small screens) */}
+      <div className="mt-3 md:hidden">
         <button
           className="flex w-full items-center justify-center gap-2 rounded-md bg-black px-4 py-2 text-sm text-white hover:bg-gray-800"
           onClick={handleAddToCart}
+          style={{ cursor: "pointer" }}
+        >
+          <ShoppingBag className="h-4 w-4" />
+          Add to Cart
+        </button>
+      </div>
+
+      {/* Hover Actions (desktop only) */}
+      <div className="hidden md:pointer-events-none md:absolute md:inset-x-0 md:bottom-0 md:flex md:translate-y-full md:items-center md:justify-center md:gap-2 md:bg-white/95 md:p-3 md:transition-all md:group-hover:translate-y-0 md:group-hover:pointer-events-auto">
+        <button
+          className="flex w-full items-center justify-center gap-2 rounded-md bg-black px-4 py-2 text-sm text-white hover:bg-gray-800"
+          onClick={handleAddToCart}
+          style={{ cursor: "pointer" }}
         >
           <ShoppingBag className="h-4 w-4" />
           Add to Cart
